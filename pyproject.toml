@@ -1,0 +1,18 @@
+[project]
+name = "myproject"
+version = "0.0.0"
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "src"
+]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "pep621"
+major_version_zero = true
+version_files = [
+  "src/myproject/__init__.py:__version__",
+]

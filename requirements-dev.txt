@@ -1,0 +1,4 @@
+commitizen
+coverage
+pre-commit
+pytest
