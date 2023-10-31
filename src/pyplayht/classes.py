@@ -27,6 +27,12 @@ class Client:
         return self._voices if self._voices else self.get_voices()
 
     def get_voices(self) -> List[VoiceType]:
+        """
+        Get list of available voices from server
+
+        Returns:
+            List[VoiceType]: list of available voice types
+        """
         path = "/api/v1/getVoices"
         response = self._request("GET", path)
         voices = response.json().get("voices")
@@ -39,6 +45,17 @@ class Client:
         text: Union[str, List[str]],
         voice: str = "en-US-JennyNeural",
     ) -> dict:
+        """
+        Create new transcription job
+
+        Args:
+            text (Union[str, List[str]]): text to transcribe
+            voice (str, optional): voice model to use.
+                Defaults to "en-US-JennyNeural".
+
+        Returns:
+            dict: new transcription job details
+        """
         path = "/api/v1/convert"
         content = text if isinstance(text, list) else [text]
         payload = {
@@ -49,12 +66,30 @@ class Client:
         return response.json()
 
     def get_coversion_job_status(self, transcription_id: str) -> dict:
+        """
+        Check status of job specified by transcription_id
+
+        Args:
+            transcription_id (str): job to check
+
+        Returns:
+            dict: status of specified job
+        """
         path = "/api/v1/articleStatus"
         params = {"transcriptionId": transcription_id}
         response = self._request("GET", path, params=params)
         return response.json()
 
     def download_file(self, uri: str) -> bytes:
+        """
+        Download bytes of given file
+
+        Args:
+            uri (str): location of file
+
+        Returns:
+            bytes: byte data of file
+        """
         response = self._request("GET", uri)
         return response.content
 
