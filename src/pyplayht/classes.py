@@ -1,6 +1,6 @@
 import os
 from typing import List, Union
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, urlunparse
 
 import requests
 
@@ -90,7 +90,19 @@ class Client:
         Returns:
             bytes: byte data of file
         """
-        response = self._request("GET", uri)
+        parsed_url = urlparse(uri)
+        # Create a new URL without the query string
+        new_url = urlunparse(
+            (
+                parsed_url.scheme,
+                parsed_url.netloc,
+                parsed_url.path,
+                "",
+                "",
+                "",
+            ),
+        )
+        response = self._request("GET", new_url)
         return response.content
 
     def _request(
