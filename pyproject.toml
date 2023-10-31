@@ -1,5 +1,5 @@
 [project]
-name = "myproject"
+name = "pyplayht"
 version = "0.0.0"
 
 [tool.pytest.ini_options]
@@ -14,5 +14,5 @@ version_scheme = "pep440"
 version_provider = "pep621"
 major_version_zero = true
 version_files = [
-  "src/myproject/__init__.py:__version__",
+  "src/pyplayht/__init__.py:__version__",
 ]
