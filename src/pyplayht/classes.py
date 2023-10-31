@@ -1,6 +1,6 @@
 import os
 from typing import List, Union
-from urllib.parse import urlencode, urljoin
+from urllib.parse import urljoin, urlparse
 
 import requests
 
@@ -28,9 +28,7 @@ class Client:
 
     def get_voices(self) -> List[VoiceType]:
         path = "/api/v1/getVoices"
-        url = urljoin(self.base_url, path)
-        response = self.session.get(url)
-        response.raise_for_status()
+        response = self._request("GET", path)
         voices = response.json().get("voices")
         voices = [VoiceType(**voice) for voice in voices]
         self._voices = voices
@@ -42,26 +40,43 @@ class Client:
         voice: str = "en-US-JennyNeural",
     ) -> dict:
         path = "/api/v1/convert"
-        url = urljoin(self.base_url, path)
         content = text if isinstance(text, list) else [text]
         payload = {
             "content": content,
             "voice": voice,
         }
-        response = self.session.post(url, json=payload)
-        response.raise_for_status()
+        response = self._request("POST", path, json=payload)
         return response.json()
 
     def get_coversion_job_status(self, transcription_id: str) -> dict:
         path = "/api/v1/articleStatus"
         params = {"transcriptionId": transcription_id}
-        url = urljoin(self.base_url, path)
-        url = urljoin(url, "?" + urlencode(params))
-        response = self.session.get(url)
-        response.raise_for_status()
+        response = self._request("GET", path, params=params)
         return response.json()
 
-    def download_file(self, uri: str):
-        response = self.session.get(uri)
-        response.raise_for_status()
+    def download_file(self, uri: str) -> bytes:
+        response = self._request("GET", uri)
         return response.content
+
+    def _request(
+        self,
+        method: str,
+        path: str,
+        params: dict = None,
+        json: dict = None,
+        stream: bool = False,
+        timeout: int = 30,
+    ) -> requests.Response:
+        url = urljoin(self.base_url, path)
+        if urlparse(path).scheme:
+            url = path
+        response = self.session.request(
+            method=method,
+            url=url,
+            params=params,
+            json=json,
+            stream=stream,
+            timeout=timeout,
+        )
+        response.raise_for_status()
+        return response
