@@ -1,10 +1,10 @@
 [project]
 name = "pyplayht"
 version = "0.0.0"
-dependencies = [
-  "python-dotenv >= 0.20.0",
-  "requests >= 2.28.2",
-]
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
 
 [tool.pytest.ini_options]
 pythonpath = [
