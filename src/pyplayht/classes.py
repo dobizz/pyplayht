@@ -3,6 +3,7 @@ from typing import List, Union
 from urllib.parse import urljoin, urlparse, urlunparse
 
 import requests
+from retry import retry
 
 from pyplayht.types import VoiceType
 
@@ -105,6 +106,7 @@ class Client:
         response = self._request("GET", new_url)
         return response.content
 
+    @retry(tries=3, delay=5, backoff=2)
     def _request(
         self,
         method: str,
