@@ -6,7 +6,7 @@ on:
 
 jobs:
   bump_version:
-    if: ${{ startsWith(github.event.head_commit.message, 'bump:') }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'bump:') }}
     name: "Bump version and create changelog with commitizen"
     runs-on: ubuntu-latest
 
