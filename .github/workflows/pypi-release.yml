@@ -1,0 +1,31 @@
+name: PyPi Release
+
+on:
+  push:
+    branches: [ "release" ]
+
+permissions:
+  contents: read
+
+jobs:
+    pypi-publish:
+      name: upload release to PyPI
+      runs-on: ubuntu-latest
+
+      # Specifying a GitHub environment is optional, but strongly encouraged
+      environment: release
+
+      permissions:
+        # IMPORTANT: this permission is mandatory for trusted publishing
+        id-token: write
+
+      steps:
+        # publish to test pypi repo
+        - name: Publish package distributions to TestPyPI
+          uses: pypa/gh-action-pypi-publish@release/v1
+          with:
+            repository-url: https://test.pypi.org/legacy/
+
+        # publish to live pypi repo
+        - name: Publish package distributions to PyPI
+          uses: pypa/gh-action-pypi-publish@release/v1
